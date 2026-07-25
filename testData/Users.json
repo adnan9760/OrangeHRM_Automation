@@ -1,0 +1,30 @@
+{
+    "validUser":{
+        "username": "Admin",
+        "password":"admin123"
+    },
+    "invalidUser":{
+        "username": "Admin",
+        "password":"admin"
+    },
+    "invalidUser2":{
+        "username": "Admin",
+        "password":"admin1234"
+    },
+    "invalidUser3":{
+        "username": "Admin12",
+        "password":"admin123"
+    },
+    "invalidUser4":{
+        "username":"",
+        "password":"admin123"
+    },
+    "invalidUser5":{
+        "username":"Admin",
+        "password":""
+    },
+    "invalidUser6":{
+        "username":"",
+        "password":""
+    }
+}
