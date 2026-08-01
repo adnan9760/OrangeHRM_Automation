@@ -24,11 +24,31 @@ test.describe("Verify Contact Details Page", () => {
       "9760049313", "9760049313", "934830",
       "adnanofficial239@gmail.com", "ak9760049@gmail.com"
     );
+    await expect(page.locator('.oxd-toast')).toBeVisible();
   });   
+test("Verify Required message when all  fields are empty", async ({ page }) => {
+    await contactdetailspage.verifyContactDetail(
+      "", "", "", "", "", "",
+      "India", "", "",
+      "", ""
+    );
+    await expect(contactdetailspage.requiredmsg).not().toBeVisible();
 
+    await expect(this.page.getByText('Success').first()).toBeVisible();
+})
   test("Upload attachment", async ({ page }) => {   
     const filePath = path.resolve(__dirname, 'C:\\Users\\ak976\\Downloads\\ADNAN__RESUME.pdf');
     await contactdetailspage.uploadAttachment(filePath, "My resume");
     await expect(page.locator('.oxd-toast')).toBeVisible();
   });
+
+
+  test("Verify Required message when attachment is not uploaded",async({ page })=>{
+  await contactdetailspage.withoutuploadAttachment("My resume");
+  })
+
+  test("Verify Required message when attachment is not uploaded and description is empty",async({ page })=>{
+    await contactdetailspage.withoutuploadAttachment("");
+  })
+  
 });

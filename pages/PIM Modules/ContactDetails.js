@@ -82,4 +82,12 @@ this.savebtn = page.locator("//button[normalize-space()='Save']");
   await this.page.getByRole('button', { name: 'save' }).first().click();
 }
 
+async withoutuploadAttachment(description = '') {
+      await this.page.getByRole('button', { name: 'save' }).first().click();
+
+      await this.page.getByText('Required').waitFor({ state: 'visible' });
+}
+
+
+
 }
