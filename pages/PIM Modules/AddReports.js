@@ -23,7 +23,19 @@ export class AddReports extends BasePage {
 
 this.selectioncritariaplusbtn = page.locator(
   "//label[text()='Selection Criteria']/ancestor::div[contains(@class,'oxd-grid-item')]//button[contains(@class,'oxd-icon-button')]"
-);  }
+); 
+ this.selectiondisplayplusbtn = page.locator(
+    "//label[text()='Select Display Field']/ancestor::div[contains(@class,'oxd-grid-item')]//button[contains(@class,'oxd-icon-button')]"
+ )
+
+ this.toastmsg = page.locator("#oxd-toast-container ");
+
+this.reportsMenu = page.locator('a.oxd-topbar-body-nav-tab-item', { hasText: 'Reports' });
+this.reportsearch = page.locator("//label[text()='Report Name']/ancestor::div[contains(@class,'oxd-input-group')]");
+this.recordfound = page.locator("oxd-text");
+
+
+}
 
   async Gotopage() {
     await this.GoToUrl("/web/index.php/pim/definePredefinedReport");
@@ -39,8 +51,9 @@ this.selectioncritariaplusbtn = page.locator(
 
   }
 
-
-  
+ getDisplayLocator(criteriaName){
+     
+ }
 getCriteriaRow(criteriaName) {
   return this.page.locator(
     `//p[contains(@class,'orangehrm-report-criteria-name') and text()='${criteriaName}']/ancestor::div[contains(@class,'orangehrm-report-criteria')]`
@@ -74,22 +87,20 @@ async fillCriteriaTextInput(criteriaName, value) {
   
  await row.waitFor({state:"visible"})
   await row.locator('input[placeholder="Type for hints..."]').fill(value);
-
- 
 }
-
+  
 
 async selectCriteriaDropdown(criteriaName,value, optionText) {
   const row = this.getCriteriaLocator(criteriaName);
    await row.waitFor({state:"visible"})
   await row.locator('input[placeholder="Type for hints..."]').fill(value);
 
- const morerow = row.locator('ancestor:://div[contains@class,"oxd-autocomplete-text-input"] //div[contains@class,"oxd-autocomplete-wrapper"] ');
+ const morerow = row.locator('ancestor:://div[contains@class,"oxd-autocomplete-text-input"] //div[contains@class,"oxd-autocomplete-wrapper"] ').first();
 
   const dropdown = morerow.locator('.oxd-select-text');
-  const listbox = this.page.locator('[role="listbox"]');
+  const listbox = this.page.locator('[role="listbox"]').first();
   await listbox.waitFor({ state: 'visible' });
-  await listbox.getByText(optionText, { exact: true }).click();
+  await listbox.getByText(optionText, { exact: true }).first().click();
 }
   async selectFromDropdown(dropdownLocator, optionText) {
     await this.page.locator('.oxd-form-loader').waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
@@ -107,12 +118,36 @@ async selectCriteriaDropdown(criteriaName,value, optionText) {
 
     await this.selectioncritariaplusbtn.click();
 
-     await this.addCriteriaWithValue("Employee Name","John" ,"joker john selvam",true);
+     await this.addCriteriaWithValue("Employee Name","John" ,"John Doe",true);
 
     
     await this.selectFromDropdown(this.include, includeOption);
     await this.selectFromDropdown(this.displayfieldgroup,selectdisplayfield);
+   
+  
     await this.selectFromDropdown(this.displaygroup, displayField);
+     await this.selectiondisplayplusbtn.click();
     await this.savebtn.click();
-  }
+
+     }
+
+     async  ToastMsg(){
+      await this.toastmsg.first().waitFor({state:'visible'});
+      return  await this.toastmsg.first().textContent();
+     }
+  async VerifyReport(value, optionText) {
+  await this.reportsMenu.click();
+
+  const searchInput = this.reportsearch.locator('input[placeholder="Type for hints..."]');
+  await searchInput.waitFor({ state: 'visible' });
+  await searchInput.fill(value);
+
+  const listbox = this.page.locator('[role="listbox"]');
+  await listbox.waitFor({ state: 'visible' });
+  await listbox.getByText(optionText, { exact: true }).click();
+  await this.page.getByRole('button', { name: 'Search' }).click();
+
+  await expect(this.page.locator('.orangehrm-horizontal-padding')).toContainText("Record Found");
+}
+     
 }
