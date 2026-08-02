@@ -19,23 +19,23 @@ test.describe("Verify Add Report Page", () => {
         await addreport.Gotopage();
     })
 
-   //  test("Add Report with all parameter", async ({ page }) => {
-   //     const reportName = `EmpReport_${Date.now()}`;
-   //      await addreport.AddReportAllParameter(reportName, "Employee Name", "Past Employees Only", "Personal", "Employee Id");
-   //       await page.waitForTimeout(3000);
-   //      const toast_msg = await addreport.ToastMsg();
-   //      await expect(toast_msg).toContain("Success");
+    test("Add Report with all parameter", async ({ page }) => {
+       const reportName = `EmpReport_${Date.now()}`;
+        await addreport.AddReportAllParameter(reportName, "Employee Name", "Past Employees Only", "Personal", "Employee Id");
+         await page.waitForTimeout(3000);
+        const toast_msg = await addreport.ToastMsg();
+        await expect(toast_msg).toContain("Success");
       
-   //  })
+    })
 
-   //  test("Add Report without Required Paramenter", async ({ page }) => {
-   //      await addreport.AddReportAllParameter("", "Employee Name", "Past Employees Only", "Personal", "Employee Id");
+    test("Add Report without Required Paramenter", async ({ page }) => {
+        await addreport.AddReportAllParameter("", "Employee Name", "Past Employees Only", "Personal", "Employee Id");
        
-   //      const errorText = await addreport.isRequiredVisible();
+        const errorText = await addreport.isRequiredVisible();
 
-   //      await expect(errorText).toContain("Required");
-   //      await expect(addreport.requiredmsg).toBeVisible();
-   //  })
+        await expect(errorText).toContain("Required");
+        await expect(addreport.requiredmsg).toBeVisible();
+    })
 
 
     test("Verify The Report Save Successfully ",async({page })=>{
